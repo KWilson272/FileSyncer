@@ -1,0 +1,43 @@
+// Protocol buffer file to outline the communication of files and their
+// attributes between machines
+// Author: KWilson272
+// Date Finished: 
+
+syntax = "proto3";
+
+package kwilson272.file_syncer;
+
+service FileServer {
+    rpc req_file_desc (FileKey) returns (FileDesc);
+    rpc download (FileKey) returns (stream FileChunk);
+}
+
+// Used by the client machine to identify files on the host machine without
+// knowing the explicit path
+message FileKey {
+  string id = 1;
+}
+
+enum FileState {
+  // If there is no FileKey mapped to a file on the host machine
+  UNKNOWN_FILE_KEY = 0;
+  // If there is a FileKey mapped to an absent file
+  FILE_NOT_PRESENT = 1; 
+  FILE_NOT_READABLE = 2;
+  DOWNLOAD_POSSIBLE = 3;
+}
+
+message FileDesc {
+  // Communicates if the host can transfer the file
+  FileState state = 1; 
+  // The name of the file being downloaded
+  string file_name = 2; 
+  // Used by the client to check for updates
+  double last_modification_time = 3; 
+  // Used by the client to ensure the full file was transferred
+  int32 file_size = 4;  
+}
+
+message FileChunk {
+  bytes content = 1;
+}

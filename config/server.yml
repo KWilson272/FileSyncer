@@ -1,0 +1,9 @@
+# Address and port to bind to
+Address: "localhost"
+Port: "50051"
+
+# Organized by Key: Path
+# Key: The string key the client will send to the server to request a file
+# Path: Where on the host machine the file is located
+Files:
+  Test: '/Path/To/File.example'

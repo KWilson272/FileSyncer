@@ -1,0 +1,12 @@
+# Address and port of the host server
+Address: "localhost"
+Port: "50051"
+
+Files:
+  # File Key sent to the host to identify which file to install
+  Test:
+    # Path to the directory the file will be installed in
+    Path: '/Path/To/Directory'
+    # The main name of the file to be replaced, does not need 
+    # to include versioning or file type extension
+    Replace: "Test"
