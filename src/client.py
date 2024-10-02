@@ -91,7 +91,6 @@ def main():
     with open(yml_path, 'r') as file:
         options = yaml.safe_load(file)
     
-    # This may not be the correct method to handle this
     if options == None:
         print('Unable to load options from the client.yml. The program can not continue')
         sys.exit(0)
@@ -138,7 +137,6 @@ def main():
                 for chunk in stub.download(file_key):
                     file.write(chunk.content)
 
-            # Very bare bones way of managing incomplete transfers
             if not os.path.getsize(new_path) == file_desc.file_size:
                 byte_diff = os.path.getsize(new_path) - file_desc.file_size
                 print(f"Download failed, difference: {byte_diff} bytes")
@@ -147,7 +145,7 @@ def main():
             print("Download successful!")
             time_delta = time.time_ns() - start_time
             time_delta /= 1e+9 # Convert from ns -> seconds
-            string_delta = '{0:.3f}'.format(time_delta) # Truncate to 3 decimal places
+            string_delta = '{0:.3f}'.format(time_delta)
             print(f"Finished downloading the file, took: {string_delta} seconds")
 
             if active_file != None:

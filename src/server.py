@@ -122,7 +122,7 @@ def init_service():
 
             server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
             syncer_pb2_grpc.add_FileServerServicer_to_server(syncer_service, server)
-            server.add_insecure_port(address) # TODO: will need to use a secure port before deployment
+            server.add_insecure_port(address)
 
             server.start()
             server.wait_for_termination()
