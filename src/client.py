@@ -11,12 +11,29 @@ import syncer_pb2
 import syncer_pb2_grpc
 
 class BackupHandler:
-    
+    """Handles creating new backups and their necessary directories, as well as
+    deleting backups when the amount of stored files grows too large.
+
+    Fields:
+        _dir_path (Path) - The path to the Backups directory
+        _max_backups (int) - The maximum amount of backed up files a given 
+                            file ID can have
+    """
+
     def __init__(self):
+        """The constructor of the BackupHandler Class."""
         self._dir_path = os.path.join(os.getcwd(), 'Backups')
         self._max_backups = 5
 
     def clean_dir(self, file_id):
+        """Removes excess files from the backup directory for the provided
+          file id. Excess is determined by the _max_backups variable, and 
+          files are removed on the basis of oldest creation time first.
+
+        Parameters:
+            file_id (String) - the ID passed to the host server when 
+                            requesting a file to download
+        """
         backup_dir = os.path.join(self._dir_path, file_id, '')
         if not os.path.exists(backup_dir):
             return
@@ -37,9 +54,15 @@ class BackupHandler:
         return
 
     def back_up(self, file_id, old_file):
-        # Get the actual name of the file to replace
+        """Copies the provided file into its specified backup folder.
+        
+        Parameters:
+            file_id (String) - the file ID used to retrieve the downloaded 
+                            file from the host
+            old_file (Path) - the path to the out-of-date file that is to be
+                            backed up
+        """
         print(f'Backing up {old_file}.')
-
         backup_dir = os.path.join(self._dir_path, file_id)
         try:
             os.makedirs(backup_dir)
@@ -65,6 +88,14 @@ class BackupHandler:
     
 
 def display_file_state(file_desc, file_key):
+    """Helper function to display the error state returned by the host machine
+        
+    Parameters:
+        file_desc (FileDesc) - the File description returned by the host 
+                            machine; contains the error state
+        file_key (FileKey) - the FileKey used in the failed resource 
+                            request to the host
+    """
     file_state = file_desc.state
     if file_state == syncer_pb2.UNKNOWN_FILE_KEY:
         print('The provided key could not be found on the host machine. What was read:', file_key.id)
@@ -75,6 +106,18 @@ def display_file_state(file_desc, file_key):
 
 
 def find_old_file(install_dir, replace_name, targ_extension):
+    """Returns the path to the file that is being replaced by the updated one 
+    received from the host.
+    
+    Parameters:
+        install_dir (Path) - the Path to the directory the updated file will
+                            be installed in
+        replace_name (String) - The rough name of the old file being searched
+                            for. This can exclude version numbers, but the 
+                            provided name MUST be included in the returned 
+                            file's name
+        targ_extension (String) - The file extension of the target file
+    """
     for file in os.listdir(install_dir):  
         path = os.path.join(install_dir, file)
         extension = os.path.splitext(file)[1]

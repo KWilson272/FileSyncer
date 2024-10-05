@@ -17,7 +17,7 @@ class FileSyncerServicer(syncer_pb2_grpc.FileServerServicer):
     information from the host machine to the client.
 
     Fields:
-        paths_by_keys (dictionary<string, string>):
+        paths_by_keys (dictionary<string, string>) - 
             Maps the file keys the client will use to make requests to file paths
     """
 
@@ -25,7 +25,7 @@ class FileSyncerServicer(syncer_pb2_grpc.FileServerServicer):
         """The constructor for the FileSyncerServicer class
 
         Parameters:
-            paths_by_keys (dictionary<string, string>): 
+            paths_by_keys (dictionary<string, string>) - 
                 a dictionary of string file paths mapped to string file keys
         """
         self.paths_by_key = paths_by_key
